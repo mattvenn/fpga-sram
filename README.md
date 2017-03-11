@@ -17,7 +17,8 @@ From datasheet: ISSI IS62WV25616DALL and IS62/65WV25616DBLL are high-speed, low 
 
 ## current status
 
-not working!
+not working! Need to check with a scope, but I'm assuming the tristate on the
+datapins register is not working.
 
 ## testbench
 
