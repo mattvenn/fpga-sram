@@ -1,7 +1,7 @@
 `default_nettype none
 module sram (
     input wire reset,
-    // 50ns max for data read/write. at 12MHz, each clock cycle is 62.5 ns, so write in 1 cycle
+    // 50ns max for data read/write. at 12MHz, each clock cycle is 83ns, so write in 1 cycle
 	input wire clk,
     output wire set_data_pins,
     input wire write,
