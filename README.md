@@ -23,4 +23,4 @@ not working!
 
 [sram_tb.v](sram_tb.v) testbench looks good to me, if I understand the timing diagrams
 
-![sram.png](testbench)
+![gtkwave screenshot](sram.png)
