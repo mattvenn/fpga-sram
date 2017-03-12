@@ -23,6 +23,7 @@ module sram (
 
     localparam STATE_IDLE = 0;
     localparam STATE_WRITE = 1;
+    localparam STATE_WRITE_SETUP = 4;
     localparam STATE_READ_SETUP = 2;
     localparam STATE_READ = 3;
 
@@ -45,6 +46,13 @@ module sram (
 
     assign ready = (!reset && state == STATE_IDLE) ? 1 : 0; 
 
+    initial begin
+        state <= STATE_IDLE;
+        output_enable <= 1;
+        chip_select <= 1;
+        write_enable <= 1;
+    end
+
 	always@(posedge clk) begin
         if( reset == 1 ) begin
             state <= STATE_IDLE;
@@ -59,15 +67,19 @@ module sram (
                     chip_select <= 1;
                     write_enable <= 1;
   //                  tri_data_pins <= 1;
-                    if(write) state <= STATE_WRITE;
+                    if(write) state <= STATE_WRITE_SETUP;
                     else if(read) state <= STATE_READ_SETUP;
                 end
-                STATE_WRITE: begin
-                    write_enable <= 0;
+                STATE_WRITE_SETUP: begin
                     chip_select <= 0;
                     data_write_reg <= data_write;
  //                   tri_data_pins <= 0;
-                    if(!write) state <= STATE_IDLE;
+                    //if(!write) state <= STATE_IDLE;
+                    state <= STATE_WRITE;
+                end
+                STATE_WRITE: begin
+                    write_enable <= 0;
+                    state <= STATE_IDLE;
                 end
                 STATE_READ_SETUP: begin
                     output_enable <= 0;
@@ -75,8 +87,9 @@ module sram (
                     state <= STATE_READ;
                 end
                 STATE_READ: begin
-                    data_read_reg = data_pins_in;
-                    if(!read) state <= STATE_IDLE;
+                    data_read_reg <= data_pins_in;
+                    //if(!read) state <= STATE_IDLE;
+                    state <= STATE_IDLE;
                 end
             endcase
         end
