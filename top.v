@@ -34,14 +34,14 @@ module top (
     wire [15:0] data_pins_out;
     wire set_data_pins;
 
-    assign PMOD = data_read;
+    assign PMOD = data_read[14:11];
     
     sram sram_test(.clk(clk), .address(address), .data_read(data_read), .data_write(data_write), .write(write), .read(read), .reset(reset), .ready(ready), 
         .data_pins(DAT), 
         .address_pins(ADR), 
         .OE(RAMOE), .WE(RAMWE), .CS(RAMCS));
 
-    clk_divn #(.WIDTH(32), .N(120000)) 
+    clk_divn #(.WIDTH(32), .N(1000)) 
         clockdiv_slow(.clk(clk), .clk_out(slow_clk));
 
     always @(posedge slow_clk) begin
@@ -60,5 +60,8 @@ module top (
             end else
            write <= 0;
         end
+        // flip each cycle of the counter
+        if(counter == 0)
+            read_write <= read_write ? 0 : 1;
     end
 endmodule
