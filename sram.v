@@ -3,7 +3,6 @@ module sram (
     input wire reset,
     // 50ns max for data read/write. at 12MHz, each clock cycle is 83ns, so write in 1 cycle
 	input wire clk,
-    output wire set_data_pins,
     input wire write,
     input wire read,
     input wire [15:0] data_write,       // the data to write
@@ -13,19 +12,31 @@ module sram (
 
     // SRAM pins
     output wire [17:0] address_pins,    // address pins of the SRAM
-    input wire  [15:0] data_pins_in,
-    output wire [15:0] data_pins_out,
+    inout wire [15:0] data_pins,
     output wire OE,                     // output enable - low to enable
     output wire WE,                     // write enable - low to enable
     output wire CS                      // chip select - low to enable
 );
 
+    wire  [15:0] data_pins_in;
+    wire [15:0] data_pins_out;
 
     localparam STATE_IDLE = 0;
     localparam STATE_WRITE = 1;
     localparam STATE_WRITE_SETUP = 4;
     localparam STATE_READ_SETUP = 2;
     localparam STATE_READ = 3;
+
+    SB_IO #(
+        .PIN_TYPE(6'b 1010_01),
+    ) sram_data_pins [15:0] (
+        .PACKAGE_PIN( data_pins ),
+        .OUTPUT_ENABLE(set_data_pins),
+        .D_OUT_0(data_pins_out),
+        .D_IN_0(data_pins_in),
+    );
+
+    wire set_data_pins;
 
     reg output_enable;
     reg write_enable;
