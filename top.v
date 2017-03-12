@@ -18,9 +18,11 @@ module top (
     reg write;
     reg reset;
     reg ready;
-    reg [4:0] counter;
+    reg [15:0] counter;
+    reg read_write;
 
     initial begin
+        read_write <= 0;
         read <= 0;
         write <= 0;
         reset <= 0;
@@ -39,23 +41,24 @@ module top (
         .address_pins(ADR), 
         .OE(RAMOE), .WE(RAMWE), .CS(RAMCS));
 
-    clk_divn #(.WIDTH(32), .N(12000000)) 
+    clk_divn #(.WIDTH(32), .N(120000)) 
         clockdiv_slow(.clk(clk), .clk_out(slow_clk));
 
     always @(posedge slow_clk) begin
-        if(counter == 1) begin
-           write <= 1; 
-        end
-        if(counter == 2) begin
+        address <= counter;
+        if(read_write) begin
+            if(ready) begin
+                counter <= counter + 1;
+                read <= 1;
+            end else
+                read <= 0;
+        end else begin
+            if(ready) begin
+                data_write <= counter;
+                counter <= counter + 1;
+                write <= 1;
+            end else
            write <= 0;
         end
-        if(counter == 3) begin
-           read <= 1;
-        end
-        if(counter == 4) begin
-           read <= 0;
-        end
-        counter <= counter + 1;
     end
-
 endmodule
