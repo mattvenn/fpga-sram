@@ -2,7 +2,9 @@
 
 [mystorm](https://mystorm.uk/) blackice has 0.5MByte SRAM on the back of the board
 
-[datasheet for SRAM](http://docs-europe.electrocomponents.com/webdocs/1313/0900766b81313964.pdf)
+[datasheet for SRAM](ram.pdf)
+
+[mystorm schematic](mystorm.pdf)
 
 From datasheet: ISSI IS62WV25616DALL and IS62/65WV25616DBLL are high-speed, low power, 4M bit SRAMs organized as 256K words by 16 bits. 
 
@@ -17,11 +19,12 @@ From datasheet: ISSI IS62WV25616DALL and IS62/65WV25616DBLL are high-speed, low 
 
 ## current status
 
-not working! Need to check with a scope, but I'm assuming the tristate on the
-datapins register is not working.
+* working at 12MHz system clock
+* test only reads and writes to first 2^16 words
+* bits 14:11 of the data is shown on the boards's 4 leds
 
 ## testbench
 
-[sram_tb.v](sram_tb.v) testbench looks good to me, if I understand the timing diagrams
+[sram_tb.v](sram_tb.v)
 
 ![gtkwave screenshot](sram.png)

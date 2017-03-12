@@ -9,34 +9,22 @@ module sram (
     output wire [15:0] data_read,       // the data that's been read
     input wire [17:0] address,          // address to write to
     output wire ready,                  // high when ready for next operation
+    output wire data_pins_out_en,       // when to switch between in and out on data pins
 
     // SRAM pins
     output wire [17:0] address_pins,    // address pins of the SRAM
-    inout wire [15:0] data_pins,
+    input  wire [15:0] data_pins_in,
+    output wire [15:0] data_pins_out,
     output wire OE,                     // output enable - low to enable
     output wire WE,                     // write enable - low to enable
     output wire CS                      // chip select - low to enable
 );
-
-    wire  [15:0] data_pins_in;
-    wire [15:0] data_pins_out;
 
     localparam STATE_IDLE = 0;
     localparam STATE_WRITE = 1;
     localparam STATE_WRITE_SETUP = 4;
     localparam STATE_READ_SETUP = 2;
     localparam STATE_READ = 3;
-
-    SB_IO #(
-        .PIN_TYPE(6'b 1010_01),
-    ) sram_data_pins [15:0] (
-        .PACKAGE_PIN( data_pins ),
-        .OUTPUT_ENABLE(set_data_pins),
-        .D_OUT_0(data_pins_out),
-        .D_IN_0(data_pins_in),
-    );
-
-    wire set_data_pins;
 
     reg output_enable;
     reg write_enable;
@@ -45,9 +33,8 @@ module sram (
     reg [4:0] state;
     reg [15:0] data_read_reg;
     reg [15:0] data_write_reg;
-//    reg tri_data_pins;
 
-    assign set_data_pins = (state == STATE_WRITE) ? 1 : 0; // turn on output pins when writing data
+    assign data_pins_out_en = (state == STATE_WRITE) ? 1 : 0; // turn on output pins when writing data
     assign address_pins = address;
     assign data_pins_out = data_write_reg;
     assign data_read = data_read_reg;
@@ -77,15 +64,12 @@ module sram (
                     output_enable <= 1;
                     chip_select <= 1;
                     write_enable <= 1;
-  //                  tri_data_pins <= 1;
                     if(write) state <= STATE_WRITE_SETUP;
                     else if(read) state <= STATE_READ_SETUP;
                 end
                 STATE_WRITE_SETUP: begin
                     chip_select <= 0;
                     data_write_reg <= data_write;
- //                   tri_data_pins <= 0;
-                    //if(!write) state <= STATE_IDLE;
                     state <= STATE_WRITE;
                 end
                 STATE_WRITE: begin
@@ -99,7 +83,6 @@ module sram (
                 end
                 STATE_READ: begin
                     data_read_reg <= data_pins_in;
-                    //if(!read) state <= STATE_IDLE;
                     state <= STATE_IDLE;
                 end
             endcase

@@ -24,14 +24,15 @@ module test;
      # 1 reset = 1;
      # 2 reset = 0;
      // write
-     # 4 address = 17'h0;
-     # 4 data_write = 16'hAAAA;
-     # 5 write = 1;
-     # 6 write = 0;
+     # 1 address = 17'h0;
+     # 1 data_write = 16'hAAAA;
+     # 2 write = 1;
+     # 2 write = 0;
+     # 10
      // read
-     # 9 set_data <= 1;
-     # 10 read = 1;
-     # 11 read = 0;
+     # 1 set_data <= 1;
+     # 2 read = 1;
+     # 2 read = 0;
      # 20
      $finish;
   end
