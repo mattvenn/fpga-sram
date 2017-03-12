@@ -4,7 +4,7 @@
 
 [datasheet for SRAM](ram.pdf)
 
-[mystorm schematic](mystorm.pdf)
+[mystorm blackice schematic](mystorm.pdf)
 
 From datasheet: ISSI IS62WV25616DALL and IS62/65WV25616DBLL are high-speed, low power, 4M bit SRAMs organized as 256K words by 16 bits. 
 
@@ -20,8 +20,10 @@ From datasheet: ISSI IS62WV25616DALL and IS62/65WV25616DBLL are high-speed, low 
 ## current status
 
 * working at 12MHz system clock
-* test only reads and writes to first 2^16 words
+* test reads then writes to first 2^16 words
+* data written is the current address
 * bits 14:11 of the data is shown on the boards's 4 leds
+* [boring test video](https://goo.gl/photos/QZVVtneaXWpWAp4N6)
 
 ## testbench
 
