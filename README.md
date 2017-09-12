@@ -30,3 +30,9 @@ From datasheet: ISSI IS62WV25616DALL and IS62/65WV25616DBLL are high-speed, low 
 [sram_tb.v](sram_tb.v)
 
 ![gtkwave screenshot](sram.png)
+
+## problems
+
+2 pins on the data bus collide with pins of the PLLs. When the PLL is
+activated, those pins can no longer be inout, they must be either in or out.
+[More details here](https://github.com/cseed/arachne-pnr/issues/64#issuecomment-310877601)

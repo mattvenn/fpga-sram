@@ -28,7 +28,7 @@ module test;
      # 1 data_write = 16'hAAAA;
      # 2 write = 1;
      # 2 write = 0;
-     # 10
+     wait(ready == 1);
      // read
      # 1 set_data <= 1;
      # 2 read = 1;
